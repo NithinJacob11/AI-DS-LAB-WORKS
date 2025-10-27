@@ -1,0 +1,36 @@
+from sklearn import datasets
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import confusion_matrix, classification_report
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Load dataset
+data = datasets.load_iris()
+
+x, y = data.data, data.target
+
+# Split data
+x_train, x_test, y_train, y_test = train_test_split(
+    x, y, test_size=0.2, random_state=123
+)
+
+# Train Naive Bayes
+NB = GaussianNB().fit(x_train, y_train)
+pred = NB.predict(x_test)
+
+
+
+# Print reports
+print("Confusion Matrix:\n", confusion_matrix(y_test, pred))
+print("\nClassification Report:\n", classification_report(y_test, pred))
+
+# Plot confusion matrix using Seaborn
+plt.figure(figsize=(6,4))
+sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", 
+            xticklabels=iris.target_names, 
+            yticklabels=iris.target_names)
+plt.xlabel("Predicted")
+plt.ylabel("Actual")
+plt.title("Confusion Matrix - Gaussian Naive Bayes (Iris)")
+plt.show()
