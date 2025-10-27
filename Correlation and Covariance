@@ -1,0 +1,24 @@
+import pandas as pd
+from sklearn.datasets import load_iris
+
+# Load Iris dataset
+iris = load_iris()
+df = pd.DataFrame(data=iris.data, columns=iris.feature_names)
+
+# Calculate correlation matrix
+correlation_matrix = df.corr()
+correlation_matrix.to_csv("iris_correlation.csv", index=True)
+print("Correlation matrix saved to 'iris_correlation.csv'.")
+
+# Print correlation matrix
+print("Correlation matrix:")
+print(correlation_matrix)
+
+# Calculate covariance matrix
+covariance_matrix = df.cov()
+covariance_matrix.to_csv("iris_covariance.csv", index=True)
+print("Covariance matrix saved to 'iris_covariance.csv'.")
+
+# Print covariance matrix
+print("\nCovariance matrix:")
+print(covariance_matrix)
