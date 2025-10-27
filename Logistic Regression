@@ -1,0 +1,36 @@
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+import numpy as np
+
+# Load dataset
+iris = load_iris()
+x, y = iris.data, iris.target
+class_names = iris.target_names
+
+# Correct order of variables in train_test_split
+x_train, x_test, y_train, y_test = train_test_split(
+    x, y, test_size=0.3, random_state=42
+)
+
+# Scale features
+scaler = StandardScaler()
+x_train_sc = scaler.fit_transform(x_train)
+x_test_sc = scaler.transform(x_test)
+
+# Train logistic regression model
+model = LogisticRegression(max_iter=100, random_state=42)
+model.fit(x_train_sc, y_train)
+
+# Evaluate accuracy
+accuracy = model.score(x_test_sc, y_test)
+print(f"Accuracy: {round(accuracy * 100, 3)}%")
+
+# Feature importance (coefficients)
+feature_importance = model.coef_[0]
+sorted_indices = np.argsort(feature_importance)[::-1]
+
+print("\nFeature importance:")
+for i in range(len(iris.feature_names)):
+    idx = sorted_indices[i]
