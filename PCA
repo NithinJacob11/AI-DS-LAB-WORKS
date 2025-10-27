@@ -1,0 +1,49 @@
+import pandas as pd
+from sklearn.datasets import load_iris
+from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
+import matplotlib.pyplot as plt
+import numpy as np
+import seaborn as sns
+
+# Load Iris dataset and convert into DataFrame
+iris = load_iris()
+X = iris.data
+y = iris.target
+df = pd.DataFrame(X, columns=iris.feature_names)
+
+# Scale the data
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(df)
+
+# Covariance matrix before PCA
+cov_before = np.cov(X_scaled.T)
+
+# PCA with 3 components
+pca = PCA(n_components=3)
+X_pca = pca.fit_transform(X_scaled)
+
+# Covariance matrix after PCA
+cov_after = np.cov(X_pca.T)
+
+# Plot heatmap of covariance matrix before PCA
+plt.figure(figsize=(12,5))
+
+plt.subplot(1, 2, 1)
+sns.heatmap(cov_before, annot=True, cmap='coolwarm', 
+xticklabels=iris.feature_names, yticklabels=iris.feature_names)
+plt.title('Covariance Matrix Heatmap Before PCA')
+
+# Plot heatmap of covariance matrix after PCA
+plt.subplot(1, 2, 2)
+sns.heatmap(cov_after, annot=True, cmap='coolwarm',
+            xticklabels=[f'PC{i+1}' for i in range(cov_after.shape[0])],
+            yticklabels=[f'PC{i+1}' for i in range(cov_after.shape[0])])
+plt.title('Covariance Matrix Heatmap After PCA')
+
+plt.tight_layout()
+plt.show()
+
+# Print variance before and after PCA
+print("Total variance before PCA:", np.sum(np.var(X_scaled, axis=0)))
+print("Total variance after PCA:", np.sum(np.var(X_pca, axis=0)))
